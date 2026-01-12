@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  * {
+    font-variant-numeric: lining-nums;
+    -moz-font-feature-settings: "lnum";
+    -webkit-font-feature-settings: "lnum";
+    font-feature-settings: "lnum";
+  }
+
+  input[type="text"][inputMode="decimal"] {
+    direction: ltr;
+    text-align: center;
+  }
+}
