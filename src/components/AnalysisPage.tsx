@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import type { MixAnalysisResult, GrowthPhase, AviagenRecommendation, RecommendationOverrides } from '../types';
 import { ANALYSIS_RESULTS_AR, ROSS_308_RECOMMENDATIONS, NUTRIENT_UNITS, convertValue } from '../constants';
 import NutrientVisibilityModal from './NutrientVisibilityModal';
+import ComparisonChart from './ComparisonChart';
 
 interface AnalysisPageProps {
   results: MixAnalysisResult;
@@ -286,7 +287,10 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ results, growthPhase, setGr
           </button>
 
           {isComparisonExpanded && (
-            <div id="comparison-content" className="p-6 border-t border-gray-200">
+            <div id="comparison-content" className="p-6 border-t border-gray-200 space-y-8">
+              <div className="relative h-[500px] w-full bg-gray-50 p-4 rounded-lg border">
+                <ComparisonChart results={results} recommendations={activeRecommendations} />
+              </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border">
                   <thead className="bg-gray-100">

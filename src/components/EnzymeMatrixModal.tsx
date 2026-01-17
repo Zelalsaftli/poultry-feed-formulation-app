@@ -25,19 +25,21 @@ const EnzymeMatrixModal: React.FC<EnzymeMatrixModalProps> = ({ enzyme, onSave, o
   }, [enzyme]);
 
   const handleChange = (field: keyof MatrixState, value: string) => {
-    const numericValue = parseFloat(value);
-    setMatrixState(prev => ({ 
-        ...prev, 
-        [field]: isNaN(numericValue) ? '' : numericValue 
+    // Keep the raw string value to allow typing decimals correctly.
+    setMatrixState(prev => ({
+      ...prev,
+      [field]: value,
     }));
   };
 
   const handleSave = () => {
     const cleanedMatrix = Object.entries(matrixState).reduce((acc, [key, value]) => {
-        if(value !== '' && value !== null && value !== undefined) {
-            acc[key as keyof Enzyme['matrix']] = Number(value);
-        }
-        return acc;
+      // Use parseFloat to correctly handle decimal strings and ignore trailing non-numeric characters.
+      const numericValue = parseFloat(String(value));
+      if (value !== '' && value !== null && value !== undefined && !isNaN(numericValue)) {
+        acc[key as keyof Enzyme['matrix']] = numericValue;
+      }
+      return acc;
     }, {} as Enzyme['matrix']);
 
     let numericStandardDosage = parseFloat(standardDosage);

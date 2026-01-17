@@ -284,8 +284,13 @@ const App: React.FC = () => {
   }, []);
 
   const handleUpdateEnzyme = useCallback((updatedEnzyme: Enzyme) => {
+    // Update the recipe enzymes list for immediate UI feedback on InputPage
     setEnzymes(prev =>
       prev.map(e => (e.id === updatedEnzyme.id ? updatedEnzyme : e))
+    );
+    // Also update the master enzymes list to persist the change for future use
+    setMasterEnzymes(prev =>
+      prev.map(enz => (enz.id === updatedEnzyme.id ? updatedEnzyme : enz))
     );
   }, []);
 

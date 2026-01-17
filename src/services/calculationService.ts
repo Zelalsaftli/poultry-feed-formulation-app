@@ -30,15 +30,23 @@ export const calculateMixAnalysis = (ingredients: Ingredient[], enzymes: Enzyme[
     results[key] = sumProduct(inclusions, values) / 100;
   });
 
-  // Apply enzyme matrices
+  // Apply enzyme matrices proportionally
   const activeEnzymes = enzymes.filter(e => e.dosage_g_per_ton > 0);
   activeEnzymes.forEach(enzyme => {
+    const standardDosage = enzyme.standard_dosage_g_per_ton;
+    // To avoid division by zero and incorrect calculations, proceed only if standard dosage is positive.
+    if (!standardDosage || standardDosage <= 0) {
+      return;
+    }
+
+    const dosageFactor = enzyme.dosage_g_per_ton / standardDosage;
+
     for (const key in enzyme.matrix) {
       if (results[key] !== undefined) {
         const matrixValue = enzyme.matrix[key as keyof typeof enzyme.matrix]!;
-        // بناءً على ملاحظات المستخدم، فإن المساهمة الغذائية للأنزيم ثابتة طالما تم تضمينه،
-        // بغض النظر عن الجرعة المحددة. الجرعة نفسها ستؤثر فقط على التكلفة.
-        results[key] += matrixValue;
+        // The contribution is now proportional to the ratio of actual dosage to standard dosage.
+        const contribution = matrixValue * dosageFactor;
+        results[key] += contribution;
       }
     }
   });
